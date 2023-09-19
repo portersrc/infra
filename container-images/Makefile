@@ -172,3 +172,6 @@ busybox-enc-jwe: busybox
       --encryption-key jwe:$(GUEST_COMPONENTS_PATH)/image-rs/test_data/public_key_for_tests.pem \
       docker://ghcr.io/$(COCO_IMGRS_PKG):busybox \
       docker://ghcr.io/$(COCO_IMGRS_PKG):busybox-encrypted-jwe
+
+hack:
+	@echo "hacking on the makefile"
