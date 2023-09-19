@@ -15,3 +15,5 @@ jobs:
       - name: testing makefile
         working-directory: container-images
         run: make hack
+      - name: experimenting more
+        run: skopeo --version
