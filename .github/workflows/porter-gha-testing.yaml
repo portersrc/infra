@@ -5,15 +5,13 @@ jobs:
   Explore-GitHub-Actions:
     runs-on: ubuntu-latest
     steps:
-      - run: echo "Start"
-      - run: echo "Issuing ls"
-      - run: ls
-      - run: echo "Issuing ls --version"
-      - run: ls --version
-      - run: echo "Issuing docker --version"
-      - run: docker --version
-      #- run: echo "Issuing make hack"
-      #- run: make hack
-      - run: echo "Issuing pushd container-images && make hack"
-      - run: pushd container-images && make hack
-      - run: echo "End"
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Basic echo and docker version
+        run: |
+          echo "Start"
+          docker --version
+          echo "End"
+      - name: testing makefile
+        working-directory: container-images
+        run: make hack
