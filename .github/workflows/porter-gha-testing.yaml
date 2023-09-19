@@ -12,4 +12,8 @@ jobs:
       - run: ls --version
       - run: echo "Issuing docker --version"
       - run: docker --version
+      - run: echo "Issuing make hack"
+      - run: make hack
+      - run: echo "Issuing pushd container-images && make hack"
+      - run: pushd container-images && make hack
       - run: echo "End"
