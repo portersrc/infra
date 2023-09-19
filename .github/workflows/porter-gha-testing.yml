@@ -1,0 +1,15 @@
+name: Porter GHA Testing
+run-name: ${{ github.actor }} is doing the porter GHA testing
+on: [push]
+jobs:
+  Explore-GitHub-Actions:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Start"
+      - run: echo "Issuing ls"
+      - run: ls
+      - run: echo "Issuing ls --version"
+      - run: ls --version
+      - run: echo "Issuing docker --version"
+      - run: docker --version
+      - run: echo "End"
