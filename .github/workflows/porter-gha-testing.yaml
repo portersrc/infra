@@ -12,8 +12,11 @@ jobs:
           echo "Start"
           docker --version
           echo "End"
-      - name: testing makefile
+      #- name: testing makefile
+      #  working-directory: container-images
+      #  run: make hack
+      #- name: experimenting more
+      #  run: skopeo --version
+      - name: try a build
         working-directory: container-images
-        run: make hack
-      - name: experimenting more
-        run: skopeo --version
+        run: make unsig
