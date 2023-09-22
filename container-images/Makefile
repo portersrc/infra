@@ -21,6 +21,9 @@ busybox-zstd \
 busybox-enc-jwe
 
 
+SHELL=/bin/bash
+
+
 LOCAL_SIGSTORE_PATH=$(HOME)/.local/share/containers/sigstore
 ETC_SIGSTORE_PATH=/etc/containers/ghcr_verification/signatures
 
