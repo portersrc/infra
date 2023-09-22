@@ -1,0 +1,20 @@
+#!/usr/bin/expect
+
+set COCO_PKG [lindex $argv 0]
+set IMG_TAG [lindex $argv 1]
+
+spawn cosign sign --key keys/sign/cosign.key ghcr.io/$COCO_PKG:$IMG_TAG
+
+# Look for password prompt
+expect "Enter password for private key:"
+
+# Send empty password
+send -- "\n"
+
+#By typing 'y', you attest that (1) you are not submitting the personal data of any other person; and (2) you understand and agree to the statement and the Agreement terms at the URLs listed above.
+expect "Are you sure you would like to continue?"
+
+# yes
+send -- "y\n"
+
+expect eof
