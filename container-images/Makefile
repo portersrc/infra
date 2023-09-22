@@ -20,6 +20,7 @@ busybox-gzip \
 busybox-zstd \
 busybox-enc-jwe
 
+SHELL=/bin/bash
 
 
 
@@ -68,9 +69,11 @@ cosign-sig:
       -f dockerfiles/alpine-with-sshd/Dockerfile \
       .
 	docker push ghcr.io/$(COCO_PKG):cosign-sig
-	# XXX ONLY use for testing. Pprivate key (cosign.key) is obviously exposed.
+	# XXX ONLY use for testing. Private key (cosign.key) is obviously exposed.
 	# And the password for this key is: just1testing2password3
-	cosign sign --key keys/sign/cosign.key ghcr.io/$(COCO_PKG):cosign-sig
+	#cosign sign --key keys/sign/cosign.key ghcr.io/$(COCO_PKG):cosign-sig
+	${CURDIR}/scripts/make-cosign-sig.exp $(COCO_PKG) cosign-sig
+
 
 
 # FIXME Is there a nicer way to get the digest than eval shell pipe blah blah?
