@@ -37,4 +37,6 @@ jobs:
         run: make unsig
       - name: Make cosign-sig
         working-directory: container-images
+        env:
+          COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
         run: make cosign-sig
