@@ -22,16 +22,6 @@ jobs:
           echo "Start"
           docker --version
           echo "End"
-      #- name: testing makefile
-      #  working-directory: container-images
-      #  run: make hack
-      #- name: experimenting more
-      #  run: skopeo --version
-      #- name: Write signing key to disk
-      #  env:
-      #    KEY: ${{ secrets.COSIGN_PRIVATE_KEY }}
-      #  shell: bash
-      #  run: 'echo "$KEY" > cosign.key'
       - name: Make unsig
         working-directory: container-images
         run: make unsig
