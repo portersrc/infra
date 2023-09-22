@@ -7,8 +7,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Install expect
-        run: sudo apt-get install -y expect
+      #- name: Install expect
+      #  run: sudo apt-get install -y expect
       - name: Install cosign
         uses: sigstore/cosign-installer@main
       - name: Log in to ghcr
@@ -27,6 +27,11 @@ jobs:
       #  run: make hack
       #- name: experimenting more
       #  run: skopeo --version
+      #- name: Write signing key to disk
+      #  env:
+      #    KEY: ${{ secrets.COSIGN_PRIVATE_KEY }}
+      #  shell: bash
+      #  run: 'echo "$KEY" > cosign.key'
       - name: Make unsig
         working-directory: container-images
         run: make unsig
