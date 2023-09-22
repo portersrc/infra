@@ -27,6 +27,5 @@ jobs:
         working-directory: container-images
         run: make unsig
       - name: Make cosign-sig
-        uses: actions/checkout@v4
         working-directory: container-images
         run: make cosign-sig
