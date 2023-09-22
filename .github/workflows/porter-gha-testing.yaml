@@ -23,6 +23,9 @@ jobs:
       #  run: make hack
       #- name: experimenting more
       #  run: skopeo --version
-      - name: try a build
+      - name: Make unsig
         working-directory: container-images
         run: make unsig
+      #- name: Make cosign-sig
+      #  working-directory: container-images
+      #  run: make cosign-sig
