@@ -66,7 +66,7 @@ cosign-sig:
       -f dockerfiles/alpine-with-sshd/Dockerfile \
       .
 	docker push ghcr.io/$(COCO_PKG):cosign-sig
-	./scripts/make-cosign-sig.exp $(COCO_PKG) cosign-sig
+	${CURDIR}/scripts/make-cosign-sig.exp $(COCO_PKG) cosign-sig
 
 
 # FIXME Is there a nicer way to get the digest than eval shell pipe blah blah?
