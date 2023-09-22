@@ -26,6 +26,6 @@ jobs:
       - name: Make unsig
         working-directory: container-images
         run: make unsig
-      #- name: Make cosign-sig
-      #  working-directory: container-images
-      #  run: make cosign-sig
+      - name: Make cosign-sig
+        working-directory: container-images
+        run: make cosign-sig
