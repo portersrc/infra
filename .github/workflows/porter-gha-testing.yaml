@@ -20,7 +20,7 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
       - name: Basic echo and docker version
         run: |
-          echo "Start"
+          echo "Start 1"
           docker --version
           echo "End"
       - name: Make unsig
