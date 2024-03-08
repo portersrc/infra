@@ -8,10 +8,10 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Install expect
-        run: sudo apt-get install -y expect
-      - name: Install cosign
-        uses: sigstore/cosign-installer@main
+      #- name: Install expect
+      #  run: sudo apt-get install -y expect
+      #- name: Install cosign
+      #  uses: sigstore/cosign-installer@main
       - name: Log in to ghcr
         uses: docker/login-action@v3
         with:
@@ -23,17 +23,20 @@ jobs:
           echo "Start 1"
           docker --version
           echo "End"
-      - name: Make unsig
-        working-directory: container-images
-        run: make unsig
-      - name: Make cosign-sig
-        working-directory: container-images
-        env:
-          COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
-        run: make cosign-sig
+      #- name: Make unsig
+      #  working-directory: container-images
+      #  run: make unsig
+      #- name: Make cosign-sig
+      #  working-directory: container-images
+      #  env:
+      #    COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
+      #  run: make cosign-sig
       - name: Check if gcc is here
         run: |
           gcc -dumpmachine
       - name: Check for oras
         run: |
           oras --help
+      - name: Check for rustc
+        run: |
+          rustc --version
