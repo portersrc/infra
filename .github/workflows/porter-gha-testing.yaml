@@ -45,6 +45,16 @@ jobs:
       - name: Check if gcc is here
         run: |
           gcc -dumpmachine
+      - name: build main.c
+        working-directory: try-static-link
+        run: |
+          gcc main.c
+          ldd a.out
+      - name: build main.c with static link
+        working-directory: try-static-link
+        run: |
+          gcc -static main.c
+          ldd a.out
       - name: Check for oras
         run: |
           oras --help
