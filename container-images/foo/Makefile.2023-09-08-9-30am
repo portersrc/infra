@@ -1,0 +1,133 @@
+
+
+#
+# FIXME need docker login for pushing to work...
+#
+# FIXME dont want to use sudo for buildctl. also, i have to add some way
+# of running  buildkit daemon, which id prefer not to:
+#   $ sudo ./buildkitd
+# I would have to run that in background and then make kill it at the end.
+#
+
+# "portersrc" needs to be replaced by "confidential-containers"
+
+
+#quay-unencrypted-unsigned:
+#	docker build -t quay.io/rudyjantz/coco:unsigned test-container/unencrypted
+#	docker push quay.io/rudyjantz/coco:unsigned
+#.PHONY: quay-unencrypted-unsigned
+#
+#quay-unencrypted-signed:
+#	docker build -t quay.io/rudyjantz/coco:signed test-container/unencrypted
+#	docker push quay.io/rudyjantz/coco:signed
+#	cosign sign --key signing-keys/cosign.key quay.io/rudyjantz/coco:signed
+#.PHONY: quay-unencrypted-signed
+
+unsig:
+	docker build -t ghcr.io/portersrc/coco:unsig containers/unencrypted/unsig
+	docker push ghcr.io/portersrc/coco:unsig
+.PHONY: unsig
+
+sig:
+	docker build -t ghcr.io/portersrc/coco:sig containers/unencrypted/sig
+	docker push ghcr.io/portersrc/coco:sig
+	cosign sign --key keys/sign/cosign.key ghcr.io/portersrc/coco:sig
+.PHONY: sig
+
+# Note: This won't work because i dont have the password to the private key "signature-1"
+# ... and i tried to create a signature called porter-sig but that also fails
+# for reasons.
+#sig2:
+#	docker build -t ghcr.io/portersrc/coco:sig2 containers/unencrypted/sig
+#	docker push ghcr.io/portersrc/coco:sig2
+#	cosign sign --key /home/porter/wo/confidential-containers/guest-components/image-rs/test_data/signature/signatures/porter-sig ghcr.io/portersrc/coco:sig2
+#.PHONY: sig2
+
+#enc-unsig-old:
+#	#head -c32 < /dev/random > /keys/encrypt/key1
+#	OCICRYPT_KEYPROVIDER_CONFIG="$(shell pwd)/configs/ocicrypt.conf" skopeo copy --insecure-policy --encryption-key provider:attestation-agent:keypath=$(shell pwd)/keys/encrypt/key1::keyid=kbs:///default/key/key_id1::algorithm=A256GCM docker-daemon:ghcr.io/portersrc/coco:unsig oci:enc-unsig:default
+#	skopeo copy oci:enc-unsig:default docker://ghcr.io/portersrc/coco:enc-unsig
+#.PHONY: enc-unsig-old
+
+enc-unsig: unsig
+	#head -c32 < /dev/random > /keys/encrypt/key1
+	OCICRYPT_KEYPROVIDER_CONFIG="$(shell pwd)/configs/ocicrypt.conf" \
+    skopeo copy \
+      --insecure-policy \
+      --encryption-key provider:attestation-agent:keypath=$(shell pwd)/keys/encrypt/key1::keyid=kbs:///default/key/key_id1::algorithm=A256GCM \
+      docker-daemon:ghcr.io/portersrc/coco:unsig \
+      docker://ghcr.io/portersrc/coco:enc-unsig
+.PHONY: enc-unsig
+
+enc-sig: sig
+	OCICRYPT_KEYPROVIDER_CONFIG="$(shell pwd)/configs/ocicrypt.conf" \
+    skopeo copy \
+      --insecure-policy \
+      --encryption-key provider:attestation-agent:keypath=$(shell pwd)/keys/encrypt/key1::keyid=kbs:///default/key/key_id1::algorithm=A256GCM \
+      docker-daemon:ghcr.io/portersrc/coco:sig \
+      docker://ghcr.io/portersrc/coco:enc-sig
+	cosign sign --key keys/sign/cosign.key ghcr.io/portersrc/coco:enc-sig
+.PHONY: enc-sig
+
+
+test-container-unencrypted:
+	docker build -t ghcr.io/portersrc/test-container:unencrypted containers/unencrypted/unsig
+	docker push ghcr.io/portersrc/test-container:unencrypted
+.PHONY: test-container-unencrypted
+
+test-container-encrypted:
+	#OCICRYPT_KEYPROVIDER_CONFIG="$(shell pwd)/configs/ocicrypt.conf" \
+    #skopeo copy \
+    #  --insecure-policy \
+    #  --encryption-key provider:attestation-agent:keypath=$(shell pwd)/keys/encrypt/key1::keyid=kbs:///default/key/key_id1::algorithm=A256GCM \
+    #  docker-daemon:ghcr.io/portersrc/test-container:unencrypted \
+    #  docker://ghcr.io/portersrc/test-container:encrypted
+	OCICRYPT_KEYPROVIDER_CONFIG="$(shell pwd)/configs/ocicrypt.conf" \
+    skopeo copy \
+      --insecure-policy \
+      --encryption-key provider:attestation-agent:keypath=$(shell pwd)/keys/encrypt/key1::keyid=kbs:///default/key/key_id1::algorithm=A256GCM \
+      docker-daemon:ghcr.io/portersrc/test-container:unencrypted \
+      docker://ghcr.io/portersrc/test-container:encrypted
+.PHONY: test-container-encrypted
+
+
+
+# FIXME requires buildkitd to be running
+# FIXME fix hard-coded buildctl path.
+# FIXME ghcr endpoint should not be portersrc
+busybox-gzip:
+	#docker build -t ghcr.io/portersrc/test-container-image-rs:busybox-gzip containers/test-container-image-rs
+	sudo -E \
+    /home/porter/wo/buildkit/bin/buildctl build \
+      --frontend dockerfile.v0 \
+      --output type=image,name=ghcr.io/portersrc/test-container-image-rs:busybox-gzip,push=true,compression=gzip,compression-level=8,force-compression=true,oci-mediatypes=true \
+      --local dockerfile=$(shell pwd)/containers/test-container-image-rs \
+      --local context=$(shell pwd)/containers/test-container-image-rs
+.PHONY: busybox-gzip
+
+# FIXME requires buildkitd to be running
+# FIXME fix hard-coded buildctl path.
+# FIXME ghcr endpoint should not be portersrc
+busybox-zstd:
+	sudo -E \
+    /home/porter/wo/buildkit/bin/buildctl build \
+      --frontend dockerfile.v0 \
+      --output type=image,name=ghcr.io/portersrc/test-container-image-rs:busybox-zstd,push=true,compression=zstd,compression-level=12,force-compression=true,oci-mediatypes=true \
+      --local dockerfile=$(shell pwd)/containers/test-container-image-rs \
+      --local context=$(shell pwd)/containers/test-container-image-rs
+.PHONY: busybox-zstd
+
+# FIXME requires public_key-for_tests.pem (see generate_test-data.md)
+# FIXME depends on coco:busybox; make that dependency better (e.g. through makefile itself)
+# FIXME ghcr endpoint should not be portersrc
+busybox-enc-jwe:
+	skopeo copy \
+      --dest-compress-format gzip \
+      --encryption-key jwe:public_key_for_tests.pem \
+      docker://ghcr.io/portersrc/coco:busybox \
+      docker://ghcr.io/portersrc/test-container-image-rs:busybox-encrypted-jwe
+.PHONY: busybox-enc-jwe
+
+hack:
+	echo "hi $(shell pwd)"
+.PHONY: hack
