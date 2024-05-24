@@ -5,59 +5,62 @@ jobs:
   Explore-GitHub-Actions:
     env:
       RUSTC_VERSION: 1.72.0
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     #runs-on: self-hosted
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      #- name: Install expect
-      #  run: sudo apt-get install -y expect
-      #- name: Install cosign
-      #  uses: sigstore/cosign-installer@main
-      - name: Rust toolchain installation
-        uses: actions-rs/toolchain@v1
-        with:
-          profile: minimal
-          toolchain: ${{ env.RUSTC_VERSION }}
-          override: true
-          components: rustfmt, clippy
-          target: x86_64-unknown-linux-gnu
-      - name: Log in to ghcr
-        uses: docker/login-action@v3
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-      - name: Basic echo and docker version
-        run: |
-          echo "Start 1"
-          docker --version
-          echo "End"
-      #- name: Make unsig
-      #  working-directory: container-images
-      #  run: make unsig
-      #- name: Make cosign-sig
-      #  working-directory: container-images
-      #  env:
-      #    COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
-      #  run: make cosign-sig
+      #- name: Checkout
+      #  uses: actions/checkout@v4
+      ##- name: Install expect
+      ##  run: sudo apt-get install -y expect
+      ##- name: Install cosign
+      ##  uses: sigstore/cosign-installer@main
+      #- name: Rust toolchain installation
+      #  uses: actions-rs/toolchain@v1
+      #  with:
+      #    profile: minimal
+      #    toolchain: ${{ env.RUSTC_VERSION }}
+      #    override: true
+      #    components: rustfmt, clippy
+      #    target: x86_64-unknown-linux-gnu
+      #- name: Log in to ghcr
+      #  uses: docker/login-action@v3
+      #  with:
+      #    registry: ghcr.io
+      #    username: ${{ github.actor }}
+      #    password: ${{ secrets.GITHUB_TOKEN }}
+      #- name: Basic echo and docker version
+      #  run: |
+      #    echo "Start 1"
+      #    docker --version
+      #    echo "End"
+      ##- name: Make unsig
+      ##  working-directory: container-images
+      ##  run: make unsig
+      ##- name: Make cosign-sig
+      ##  working-directory: container-images
+      ##  env:
+      ##    COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
+      ##  run: make cosign-sig
       - name: Check if gcc is here
         run: |
           gcc -dumpmachine
-      - name: build main.c
-        working-directory: try-static-link
+      - name: What is my whatever
         run: |
-          gcc main.c
-          ldd a.out
-      - name: build main.c with static link
-        working-directory: try-static-link
-        run: |
-          gcc -static main.c
-          ldd a.out
-      - name: Check for oras
-        run: |
-          oras --help
-      - name: Check for rustc
-        run: |
-          rustc --version
+          which clang
+      #- name: build main.c
+      #  working-directory: try-static-link
+      #  run: |
+      #    gcc main.c
+      #    ldd a.out
+      #- name: build main.c with static link
+      #  working-directory: try-static-link
+      #  run: |
+      #    gcc -static main.c
+      #    ldd a.out
+      #- name: Check for oras
+      #  run: |
+      #    oras --help
+      #- name: Check for rustc
+      #  run: |
+      #    rustc --version
