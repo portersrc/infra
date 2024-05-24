@@ -1,0 +1,20 @@
+
+Keys are generated with something like:
+    $ COSIGN_PASSWORD=just1testing2password3 cosign generate-key-pair
+
+Then upload them manually to the github repo's secrets. Name them like so:
+    COSIGN_PASSWORD
+    COSIGN_PRIVATE_KEY
+    COSIGN_PUBLIC_KEY
+
+Also a good tutorial is here, though the approach is a little more autoamted
+and has a keener eye towards real-world usage:
+  https://dev.to/n3wt0n/sign-your-container-images-with-cosign-github-actions-and-github-container-registry-3mni
+The key-generation step would be more like the following, which automatically
+uploads the public key, private key, and key secret to the github repo:
+    $ GITHUB_TOKEN=ghp_... \
+    COSIGN_PASSWORD=just1testing2password3 \
+    cosign generate-key-pair github://portersrc/infra
+This may be a better realistic case, but it puts the private key in a github
+secret, and I want to just keep it open and readable in the infra repo for
+testing purposes.
