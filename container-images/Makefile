@@ -61,19 +61,17 @@ unsig:
 	docker push ghcr.io/$(COCO_PKG):unsig
 
 
-# TODO Replace expect script with something better (e.g. using cosign switches,
-#      if possible)
 cosign-sig:
 	docker build \
       -t ghcr.io/$(COCO_PKG):cosign-sig \
       -f dockerfiles/alpine-with-sshd/Dockerfile \
       .
 	docker push ghcr.io/$(COCO_PKG):cosign-sig
+	# FIXME Replace expect script with something better
 	${CURDIR}/scripts/make-cosign-sig.exp $(COCO_PKG) cosign-sig
 
 
 
-# FIXME Is there a nicer way to get the digest than eval shell pipe blah blah?
 # FIXME Can we get `sudo` out of here?
 # FIXME Use --sign-passphrase-file to automatically unlock the signing key
 #       (and not have to enter the password manually)
@@ -85,6 +83,7 @@ simple-sig:
       --sign-by porter@ibm.com \
       docker-daemon:ghcr.io/$(COCO_PKG):unsig \
       docker://ghcr.io/$(COCO_PKG):simple-sig
+	# FIXME Find a nicer way to store the sha256 digest into a variable
 	$(eval DIGEST=$(shell skopeo inspect docker://ghcr.io/$(COCO_PKG):simple-sig | jq -r .Digest | sed 's/:/=/'))
 	sudo mkdir -p $(ETC_SIGSTORE_PATH)/$(COCO_PKG)@$(DIGEST)
 	sudo cp \
