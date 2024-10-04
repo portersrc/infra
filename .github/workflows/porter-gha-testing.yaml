@@ -12,43 +12,40 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Import github@runner.com key
-        working-directory: container-images
-        run: gpg --batch --import keys/sign/github-runner.keys
-      - name: Install expect
-        run: sudo apt-get install -y expect
-      - name: Install cosign
-        uses: sigstore/cosign-installer@main
-        with:
-          cosign-release: "v2.4.1"
-      #- name: Rust toolchain installation
-      #  uses: actions-rs/toolchain@v1
+      - name: Launch coco-keyprovider
+        run: |
+          git checkout git@github.com:confidential-containers/guest-components
+          cd guest-components/attestation-agent/coco_keyprovider
+          RUST_LOG=coco_keyprovider cargo run --release -- --socket 127.0.0.1:50000
+      #- name: Import github@runner.com key
+      #  working-directory: container-images
+      #  run: gpg --batch --import keys/sign/github-runner.keys
+      #- name: Install expect
+      #  run: sudo apt-get install -y expect
+      #- name: Install cosign
+      #  uses: sigstore/cosign-installer@main
       #  with:
-      #    profile: minimal
-      #    toolchain: ${{ env.RUSTC_VERSION }}
-      #    override: true
-      #    components: rustfmt, clippy
-      #    target: x86_64-unknown-linux-gnu
-      - name: Log in to ghcr
-        uses: docker/login-action@v3
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-      # 1. unsig (works)
-      - name: Make unsig
-        working-directory: container-images
-        run: make unsig
-      # 2. cosign-sig (works)
-      - name: Make cosign-sig
-        working-directory: container-images
-        env:
-          COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
-        run: make cosign-sig
-      # 3. simple-sig
-      - name: Make simple-sig
-        working-directory: container-images
-        run: make simple-sig
+      #    cosign-release: "v2.4.1"
+      #- name: Log in to ghcr
+      #  uses: docker/login-action@v3
+      #  with:
+      #    registry: ghcr.io
+      #    username: ${{ github.actor }}
+      #    password: ${{ secrets.GITHUB_TOKEN }}
+      ## 1. unsig (works)
+      #- name: Make unsig
+      #  working-directory: container-images
+      #  run: make unsig
+      ## 2. cosign-sig (works)
+      #- name: Make cosign-sig
+      #  working-directory: container-images
+      #  env:
+      #    COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
+      #  run: make cosign-sig
+      ## 3. simple-sig
+      #- name: Make simple-sig
+      #  working-directory: container-images
+      #  run: make simple-sig
       #- name: runc version check
       #  run: |
       #    runc --version
@@ -82,3 +79,11 @@ jobs:
       #- name: Check gpg
       #  run: |
       #    gpg --version
+      #- name: Rust toolchain installation
+      #  uses: actions-rs/toolchain@v1
+      #  with:
+      #    profile: minimal
+      #    toolchain: ${{ env.RUSTC_VERSION }}
+      #    override: true
+      #    components: rustfmt, clippy
+      #    target: x86_64-unknown-linux-gnu
