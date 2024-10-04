@@ -75,20 +75,24 @@ cosign-sig:
 # FIXME Can we get `sudo` out of here?
 # FIXME Use --sign-passphrase-file to automatically unlock the signing key
 #       (and not have to enter the password manually)
+# FIXME depends on importing the git@runner.com key:
+#       gpg --batch --import github-runner.keys
 simple-sig:
 	skopeo \
       copy \
       --debug \
       --insecure-policy \
-      --sign-by porter@ibm.com \
+      --sign-by git@runner.com \
+      --sign-passphrase-file $(shell pwd)/keys/sign/git-runner-password.txt \
       docker-daemon:ghcr.io/$(COCO_PKG):unsig \
       docker://ghcr.io/$(COCO_PKG):simple-sig
 	# FIXME Find a nicer way to store the sha256 digest into a variable
-	$(eval DIGEST=$(shell skopeo inspect docker://ghcr.io/$(COCO_PKG):simple-sig | jq -r .Digest | sed 's/:/=/'))
-	sudo mkdir -p $(ETC_SIGSTORE_PATH)/$(COCO_PKG)@$(DIGEST)
-	sudo cp \
-      $(LOCAL_SIGSTORE_PATH)/$(COCO_PKG)@$(DIGEST)/signature-1 \
-      $(ETC_SIGSTORE_PATH)/$(COCO_PKG)@$(DIGEST)
+	# FIXME commenting out the below because not needed for building images for CI
+	#$(eval DIGEST=$(shell skopeo inspect docker://ghcr.io/$(COCO_PKG):simple-sig | jq -r .Digest | sed 's/:/=/'))
+	#sudo mkdir -p $(ETC_SIGSTORE_PATH)/$(COCO_PKG)@$(DIGEST)
+	#sudo cp \
+    #  $(LOCAL_SIGSTORE_PATH)/$(COCO_PKG)@$(DIGEST)/signature-1 \
+    #  $(ETC_SIGSTORE_PATH)/$(COCO_PKG)@$(DIGEST)
 
 
 # FIXME This requires coco-keyprovider running from guest-components...

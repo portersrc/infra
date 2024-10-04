@@ -15,6 +15,10 @@ jobs:
       - name: Check gpg
         run: |
           gpg --version
+      - name: Import github@runner.com key
+        working-directory: container-images
+        run: |
+          gpg --batch --import keys/sign/github-runner.keys
       #- name: Install expect
       #  run: sudo apt-get install -y expect
       #- name: Install cosign
