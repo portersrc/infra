@@ -49,7 +49,7 @@ jobs:
       #- name: Make simple-sig
       #  working-directory: container-images
       #  run: make simple-sig
-      # 4. enc-unsig (works)
+      ## 4. enc-unsig (works)
       #- name: Launch coco-keyprovider and make enc-unsig
       #  run: |
       #    cd guest-components/attestation-agent/coco_keyprovider
@@ -68,25 +68,29 @@ jobs:
       #    done
       #    echo "coco-keyprovider is ready"
       #    make enc-unsig
-      # 5. enc-cosign-sig
-      - name: Launch coco-keyprovider and make enc-cosign-sig
-        run: |
-          cd guest-components/attestation-agent/coco_keyprovider
-          cargo build --release
-          RUST_LOG=coco_keyprovider cargo run --release -- --socket 127.0.0.1:50000 &
-          cd ../../../container-images
-          echo "Waiting for coco-keyprovider on localhost:50000"
-          timeout_count=1
-          while ! nc -z localhost 50000; do
-              timeout_count=$((timeout_count+1))
-              sleep 1
-              if [ $timeout_count == 5 ]; then
-                  echo "ERROR: Timed out. Exiting."
-                  exit 1
-              fi
-          done
-          echo "coco-keyprovider is ready"
-          make enc-cosign-sig
+      ## 5. enc-cosign-sig (works)
+      #- name: Launch coco-keyprovider and make enc-cosign-sig
+      #  run: |
+      #    cd guest-components/attestation-agent/coco_keyprovider
+      #    cargo build --release
+      #    RUST_LOG=coco_keyprovider cargo run --release -- --socket 127.0.0.1:50000 &
+      #    cd ../../../container-images
+      #    echo "Waiting for coco-keyprovider on localhost:50000"
+      #    timeout_count=1
+      #    while ! nc -z localhost 50000; do
+      #        timeout_count=$((timeout_count+1))
+      #        sleep 1
+      #        if [ $timeout_count == 5 ]; then
+      #            echo "ERROR: Timed out. Exiting."
+      #            exit 1
+      #        fi
+      #    done
+      #    echo "coco-keyprovider is ready"
+      #    make enc-cosign-sig
+      # 6. test-container-unencrypted
+      - name: Make test-container-unencrypted
+        working-directory: container-images
+        run: make test-container-unencrypted
       #
       #
       #
