@@ -12,50 +12,63 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Check out guest-components
-        uses: actions/checkout@v4
-        with:
-          repository: confidential-containers/guest-components
-          ref: refs/heads/main
-          path: ./guest-components
-      - name: Install Protoc
-        uses: arduino/setup-protoc@v3
-      - name: Import github@runner.com key
-        working-directory: container-images
-        run: gpg --batch --import keys/sign/github-runner.keys
-      - name: Install expect
-        run: sudo apt-get install -y expect
-      - name: Install cosign
-        uses: sigstore/cosign-installer@main
-        with:
-          cosign-release: "v2.4.1"
-      - name: Log in to ghcr
-        uses: docker/login-action@v3
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-      ## 1. unsig (works)
-      #- name: Make unsig
+      - name: Check for nc
+        run: nc -h
+      #- name: Check out guest-components
+      #  uses: actions/checkout@v4
+      #  with:
+      #    repository: confidential-containers/guest-components
+      #    ref: refs/heads/main
+      #    path: ./guest-components
+      #- name: Install Protoc
+      #  uses: arduino/setup-protoc@v3
+      #- name: Import github@runner.com key
       #  working-directory: container-images
-      #  run: make unsig
-      ## 2. cosign-sig (works)
-      #- name: Make cosign-sig
-      #  working-directory: container-images
-      #  env:
-      #    COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
-      #  run: make cosign-sig
-      ## 3. simple-sig
-      #- name: Make simple-sig
-      #  working-directory: container-images
-      #  run: make simple-sig
-      # 4. enc-unsig
-      - name: Launch coco-keyprovider and make enc-unsig
-        run: |
-          cd guest-components/attestation-agent/coco_keyprovider
-          RUST_LOG=coco_keyprovider cargo run --release -- --socket 127.0.0.1:50000
-          #cd ../../../container-images
-          #make enc-unsig
+      #  run: gpg --batch --import keys/sign/github-runner.keys
+      #- name: Install expect
+      #  run: sudo apt-get install -y expect
+      #- name: Install cosign
+      #  uses: sigstore/cosign-installer@main
+      #  with:
+      #    cosign-release: "v2.4.1"
+      #- name: Log in to ghcr
+      #  uses: docker/login-action@v3
+      #  with:
+      #    registry: ghcr.io
+      #    username: ${{ github.actor }}
+      #    password: ${{ secrets.GITHUB_TOKEN }}
+      ### 1. unsig (works)
+      ##- name: Make unsig
+      ##  working-directory: container-images
+      ##  run: make unsig
+      ### 2. cosign-sig (works)
+      ##- name: Make cosign-sig
+      ##  working-directory: container-images
+      ##  env:
+      ##    COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
+      ##  run: make cosign-sig
+      ### 3. simple-sig
+      ##- name: Make simple-sig
+      ##  working-directory: container-images
+      ##  run: make simple-sig
+      ## 4. enc-unsig
+      #- name: Launch coco-keyprovider and make enc-unsig
+      #  run: |
+      #    cd guest-components/attestation-agent/coco_keyprovider
+      #    RUST_LOG=coco_keyprovider cargo run --release -- --socket 127.0.0.1:50000
+      #    #cd ../../../container-images
+      #    #make enc-unsig
+      #
+      #
+      #
+      #
+      #
+      #
+      #
+      #
+      #
+      #
+      #
       #- name: runc version check
       #  run: |
       #    runc --version
