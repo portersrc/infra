@@ -16,6 +16,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: confidential-containres/guest-components
+          refs: refs/heads/main
       - name: Launch coco-keyprovider
         run: |
           cd attestation-agent/coco_keyprovider
