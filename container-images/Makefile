@@ -46,10 +46,11 @@ all: \
     enc-cosign-sig \
     test-container-unencrypted \
     test-container-encrypted \
-    busybox \
-    busybox-gzip \
-    busybox-zstd \
-    busybox-enc-jwe
+    busybox
+# Not part of 'all' target for now:
+#    busybox-gzip
+#    busybox-zstd
+#    busybox-enc-jwe
 
 
 
