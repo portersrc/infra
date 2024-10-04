@@ -5,7 +5,8 @@ jobs:
   Explore-GitHub-Actions:
     env:
       RUSTC_VERSION: 1.72.0
-    runs-on: ubuntu-22.04
+    #runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     #runs-on: self-hosted
 
     steps:
@@ -42,12 +43,12 @@ jobs:
       #    COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
       #  run: make cosign-sig
       # 3. simple-sig
-      #- name: Make simple-sig
-      #  working-directory: container-images
-      #  run: make simple-sig
-      - name: runc version check
-        run: |
-          runc --version
+      - name: Make simple-sig
+        working-directory: container-images
+        run: make simple-sig
+      #- name: runc version check
+      #  run: |
+      #    runc --version
       #- name: Basic echo and docker version
       #  run: |
       #    echo "Start 1"
