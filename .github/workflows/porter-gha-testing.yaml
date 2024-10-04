@@ -36,81 +36,81 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
       # 1. unsig (works)
-      #- name: Make unsig
-      #  working-directory: container-images
-      #  run: make unsig
-      ## 2. cosign-sig (works)
-      #- name: Make cosign-sig
-      #  working-directory: container-images
-      #  env:
-      #    COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
-      #  run: make cosign-sig
-      ## 3. simple-sig (works)
-      #- name: Make simple-sig
-      #  working-directory: container-images
-      #  run: make simple-sig
-      ## 4. enc-unsig (works)
-      #- name: Launch coco-keyprovider and make enc-unsig
-      #  run: |
-      #    cd guest-components/attestation-agent/coco_keyprovider
-      #    cargo build --release
-      #    RUST_LOG=coco_keyprovider cargo run --release -- --socket 127.0.0.1:50000 &
-      #    cd ../../../container-images
-      #    echo "Waiting for coco-keyprovider on localhost:50000"
-      #    timeout_count=1
-      #    while ! nc -z localhost 50000; do
-      #        timeout_count=$((timeout_count+1))
-      #        sleep 1
-      #        if [ $timeout_count == 5 ]; then
-      #            echo "ERROR: Timed out. Exiting."
-      #            exit 1
-      #        fi
-      #    done
-      #    echo "coco-keyprovider is ready"
-      #    make enc-unsig
-      ## 5. enc-cosign-sig (works)
-      #- name: Launch coco-keyprovider and make enc-cosign-sig
-      #  run: |
-      #    cd guest-components/attestation-agent/coco_keyprovider
-      #    cargo build --release
-      #    RUST_LOG=coco_keyprovider cargo run --release -- --socket 127.0.0.1:50000 &
-      #    cd ../../../container-images
-      #    echo "Waiting for coco-keyprovider on localhost:50000"
-      #    timeout_count=1
-      #    while ! nc -z localhost 50000; do
-      #        timeout_count=$((timeout_count+1))
-      #        sleep 1
-      #        if [ $timeout_count == 5 ]; then
-      #            echo "ERROR: Timed out. Exiting."
-      #            exit 1
-      #        fi
-      #    done
-      #    echo "coco-keyprovider is ready"
-      #    make enc-cosign-sig
-      ## 6. test-container-unencrypted (works)
-      #- name: Make test-container-unencrypted
-      #  working-directory: container-images
-      #  run: make test-container-unencrypted
-      ## 7. test-container-encrypted (works)
-      #- name: Make test-container-encrypted
-      #  run: |
-      #    cd guest-components/attestation-agent/coco_keyprovider
-      #    cargo build --release
-      #    RUST_LOG=coco_keyprovider cargo run --release -- --socket 127.0.0.1:50000 &
-      #    cd ../../../container-images
-      #    echo "Waiting for coco-keyprovider on localhost:50000"
-      #    timeout_count=1
-      #    while ! nc -z localhost 50000; do
-      #        timeout_count=$((timeout_count+1))
-      #        sleep 1
-      #        if [ $timeout_count == 5 ]; then
-      #            echo "ERROR: Timed out. Exiting."
-      #            exit 1
-      #        fi
-      #    done
-      #    echo "coco-keyprovider is ready"
-      #    make test-container-encrypted
-      # 8. busybox
+      - name: Make unsig
+        working-directory: container-images
+        run: make unsig
+      # 2. cosign-sig (works)
+      - name: Make cosign-sig
+        working-directory: container-images
+        env:
+          COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
+        run: make cosign-sig
+      # 3. simple-sig (works)
+      - name: Make simple-sig
+        working-directory: container-images
+        run: make simple-sig
+      # 4. enc-unsig (works)
+      - name: Launch coco-keyprovider and make enc-unsig
+        run: |
+          cd guest-components/attestation-agent/coco_keyprovider
+          cargo build --release
+          RUST_LOG=coco_keyprovider cargo run --release -- --socket 127.0.0.1:50000 &
+          cd ../../../container-images
+          echo "Waiting for coco-keyprovider on localhost:50000"
+          timeout_count=1
+          while ! nc -z localhost 50000; do
+              timeout_count=$((timeout_count+1))
+              sleep 1
+              if [ $timeout_count == 5 ]; then
+                  echo "ERROR: Timed out. Exiting."
+                  exit 1
+              fi
+          done
+          echo "coco-keyprovider is ready"
+          make enc-unsig
+      # 5. enc-cosign-sig (works)
+      - name: Launch coco-keyprovider and make enc-cosign-sig
+        run: |
+          cd guest-components/attestation-agent/coco_keyprovider
+          cargo build --release
+          RUST_LOG=coco_keyprovider cargo run --release -- --socket 127.0.0.1:50000 &
+          cd ../../../container-images
+          echo "Waiting for coco-keyprovider on localhost:50000"
+          timeout_count=1
+          while ! nc -z localhost 50000; do
+              timeout_count=$((timeout_count+1))
+              sleep 1
+              if [ $timeout_count == 5 ]; then
+                  echo "ERROR: Timed out. Exiting."
+                  exit 1
+              fi
+          done
+          echo "coco-keyprovider is ready"
+          make enc-cosign-sig
+      # 6. test-container-unencrypted (works)
+      - name: Make test-container-unencrypted
+        working-directory: container-images
+        run: make test-container-unencrypted
+      # 7. test-container-encrypted (works)
+      - name: Make test-container-encrypted
+        run: |
+          cd guest-components/attestation-agent/coco_keyprovider
+          cargo build --release
+          RUST_LOG=coco_keyprovider cargo run --release -- --socket 127.0.0.1:50000 &
+          cd ../../../container-images
+          echo "Waiting for coco-keyprovider on localhost:50000"
+          timeout_count=1
+          while ! nc -z localhost 50000; do
+              timeout_count=$((timeout_count+1))
+              sleep 1
+              if [ $timeout_count == 5 ]; then
+                  echo "ERROR: Timed out. Exiting."
+                  exit 1
+              fi
+          done
+          echo "coco-keyprovider is ready"
+          make test-container-encrypted
+      # 8. busybox (works)
       - name: Make busybox
         working-directory: container-images
         run: make busybox
