@@ -131,7 +131,7 @@ test-container-unencrypted:
 
 
 # FIXME see as enc-unsig about coco-keyprovider
-test-container-encrypted:
+test-container-encrypted: test-container-unencrypted
 	OCICRYPT_KEYPROVIDER_CONFIG="$(shell pwd)/configs/ocicrypt.conf" \
     skopeo copy \
       --insecure-policy \
