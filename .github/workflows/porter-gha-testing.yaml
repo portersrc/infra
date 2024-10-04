@@ -13,8 +13,10 @@ jobs:
         uses: actions/checkout@v4
       - name: Install expect
         run: sudo apt-get install -y expect
-      ##- name: Install cosign
-      ##  uses: sigstore/cosign-installer@main
+      - name: Install cosign
+        uses: sigstore/cosign-installer@main
+        with:
+          cosign-release: "v2.4.1"
       #- name: Rust toolchain installation
       #  uses: actions-rs/toolchain@v1
       #  with:
