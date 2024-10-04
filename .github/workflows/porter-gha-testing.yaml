@@ -12,19 +12,20 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      #- name: Install Protoc
-      #  uses: arduino/setup-protoc@v3
       - name: Check out guest-components
         uses: actions/checkout@v4
         with:
           repository: confidential-containers/guest-components
           ref: refs/heads/main
           path: ./guest-components
-      #- name: Launch coco-keyprovider and make enc-unsig
-      #  run: |
-      #    cd attestation-agent/coco_keyprovider
-      #    RUST_LOG=coco_keyprovider cargo run --release -- --socket 127.0.0.1:50000 &
-      #    make enc-unsig
+      - name: Launch coco-keyprovider and make enc-unsig
+        run: |
+          cd attestation-agent/coco_keyprovider
+          sleep 100 &
+          cd ../../../container-images
+          echo "bye"
+      #- name: Install Protoc
+      #  uses: arduino/setup-protoc@v3
       #- name: Import github@runner.com key
       #  working-directory: container-images
       #  run: gpg --batch --import keys/sign/github-runner.keys
@@ -54,6 +55,12 @@ jobs:
       #- name: Make simple-sig
       #  working-directory: container-images
       #  run: make simple-sig
+      #- name: Launch coco-keyprovider and make enc-unsig
+      #  run: |
+      #    cd attestation-agent/coco_keyprovider
+      #    RUST_LOG=coco_keyprovider cargo run --release -- --socket 127.0.0.1:50000 &
+      #    cd ../../../container-images
+      #    make enc-unsig
       #- name: runc version check
       #  run: |
       #    runc --version
