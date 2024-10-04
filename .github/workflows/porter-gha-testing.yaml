@@ -12,10 +12,13 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+      - name: Check out guest-components
+        uses: actions/checkout@v4
+        with:
+          repository: confidential-containres/guest-components
       - name: Launch coco-keyprovider
         run: |
-          git checkout git@github.com:confidential-containers/guest-components
-          cd guest-components/attestation-agent/coco_keyprovider
+          cd attestation-agent/coco_keyprovider
           RUST_LOG=coco_keyprovider cargo run --release -- --socket 127.0.0.1:50000
       #- name: Import github@runner.com key
       #  working-directory: container-images
