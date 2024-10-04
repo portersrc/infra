@@ -15,7 +15,7 @@ jobs:
       - name: Check out guest-components
         uses: actions/checkout@v4
         with:
-          repository: confidential-containres/guest-components
+          repository: confidential-containers/guest-components
           ref: refs/heads/main
       - name: Launch coco-keyprovider
         run: |
