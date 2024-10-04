@@ -20,7 +20,7 @@ jobs:
           path: ./guest-components
       - name: Launch coco-keyprovider and make enc-unsig
         run: |
-          cd attestation-agent/coco_keyprovider
+          cd guest-components/attestation-agent/coco_keyprovider
           sleep 100 &
           cd ../../../container-images
           echo "bye"
