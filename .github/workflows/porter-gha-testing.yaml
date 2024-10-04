@@ -34,20 +34,20 @@ jobs:
       #    echo "Start 1"
       #    docker --version
       #    echo "End"
-      ##- name: Make unsig
-      ##  working-directory: container-images
-      ##  run: make unsig
-      ##- name: Make cosign-sig
-      ##  working-directory: container-images
-      ##  env:
-      ##    COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
-      ##  run: make cosign-sig
-      - name: Check if gcc is here
-        run: |
-          gcc -dumpmachine
-      - name: What is my whatever
-        run: |
-          which clang
+      - name: Make unsig
+        working-directory: container-images
+        run: make unsig
+      #- name: Make cosign-sig
+      #  working-directory: container-images
+      #  env:
+      #    COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
+      #  run: make cosign-sig
+      #- name: Check if gcc is here
+      #  run: |
+      #    gcc -dumpmachine
+      #- name: What is my whatever
+      #  run: |
+      #    which clang
       #- name: build main.c
       #  working-directory: try-static-link
       #  run: |
