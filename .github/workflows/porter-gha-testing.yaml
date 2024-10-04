@@ -33,15 +33,15 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
       # 1. unsig (works)
-      #- name: Make unsig
-      #  working-directory: container-images
-      #  run: make unsig
+      - name: Make unsig
+        working-directory: container-images
+        run: make unsig
       # 2. cosign-sig (works)
-      #- name: Make cosign-sig
-      #  working-directory: container-images
-      #  env:
-      #    COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
-      #  run: make cosign-sig
+      - name: Make cosign-sig
+        working-directory: container-images
+        env:
+          COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
+        run: make cosign-sig
       # 3. simple-sig
       - name: Make simple-sig
         working-directory: container-images
