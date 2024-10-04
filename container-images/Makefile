@@ -103,7 +103,6 @@ simple-sig:
 #         $ cd guest-components/attestation-agent/coco_keyprovider
 #         $ RUST_LOG=coco_keyprovider cargo run --release -- --socket 127.0.0.1:50000
 enc-unsig: unsig
-	#RUST_LOG=coco_keyprovider cargo run --release -- --socket 127.0.0.1:50000
 	OCICRYPT_KEYPROVIDER_CONFIG="$(shell pwd)/configs/ocicrypt.conf" \
     skopeo copy \
       --insecure-policy \
