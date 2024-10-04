@@ -93,7 +93,6 @@ jobs:
       #  run: make test-container-unencrypted
       # 7. test-container-encrypted
       - name: Make test-container-encrypted
-        working-directory: container-images
         run: |
           cd guest-components/attestation-agent/coco_keyprovider
           cargo build --release
