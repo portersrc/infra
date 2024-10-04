@@ -29,19 +29,21 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
+      # 1. unsig (works)
+      #- name: Make unsig
+      #  working-directory: container-images
+      #  run: make unsig
+      # 2. cosign-sig
+      - name: Make cosign-sig
+        working-directory: container-images
+        env:
+          COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
+        run: make cosign-sig
       #- name: Basic echo and docker version
       #  run: |
       #    echo "Start 1"
       #    docker --version
       #    echo "End"
-      - name: Make unsig
-        working-directory: container-images
-        run: make unsig
-      #- name: Make cosign-sig
-      #  working-directory: container-images
-      #  env:
-      #    COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
-      #  run: make cosign-sig
       #- name: Check if gcc is here
       #  run: |
       #    gcc -dumpmachine
