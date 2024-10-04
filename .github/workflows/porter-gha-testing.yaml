@@ -45,11 +45,14 @@ jobs:
       #- name: Make simple-sig
       #  working-directory: container-images
       #  run: make simple-sig
-      - name: Basic echo and docker version
+      - name: runc version check
         run: |
-          echo "Start 1"
-          docker --version
-          echo "End"
+          runc --version
+      #- name: Basic echo and docker version
+      #  run: |
+      #    echo "Start 1"
+      #    docker --version
+      #    echo "End"
       #- name: Check if gcc is here
       #  run: |
       #    gcc -dumpmachine
