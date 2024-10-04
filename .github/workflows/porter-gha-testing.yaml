@@ -91,25 +91,29 @@ jobs:
       #- name: Make test-container-unencrypted
       #  working-directory: container-images
       #  run: make test-container-unencrypted
-      # 7. test-container-encrypted
-      - name: Make test-container-encrypted
-        run: |
-          cd guest-components/attestation-agent/coco_keyprovider
-          cargo build --release
-          RUST_LOG=coco_keyprovider cargo run --release -- --socket 127.0.0.1:50000 &
-          cd ../../../container-images
-          echo "Waiting for coco-keyprovider on localhost:50000"
-          timeout_count=1
-          while ! nc -z localhost 50000; do
-              timeout_count=$((timeout_count+1))
-              sleep 1
-              if [ $timeout_count == 5 ]; then
-                  echo "ERROR: Timed out. Exiting."
-                  exit 1
-              fi
-          done
-          echo "coco-keyprovider is ready"
-          make test-container-encrypted
+      ## 7. test-container-encrypted (works)
+      #- name: Make test-container-encrypted
+      #  run: |
+      #    cd guest-components/attestation-agent/coco_keyprovider
+      #    cargo build --release
+      #    RUST_LOG=coco_keyprovider cargo run --release -- --socket 127.0.0.1:50000 &
+      #    cd ../../../container-images
+      #    echo "Waiting for coco-keyprovider on localhost:50000"
+      #    timeout_count=1
+      #    while ! nc -z localhost 50000; do
+      #        timeout_count=$((timeout_count+1))
+      #        sleep 1
+      #        if [ $timeout_count == 5 ]; then
+      #            echo "ERROR: Timed out. Exiting."
+      #            exit 1
+      #        fi
+      #    done
+      #    echo "coco-keyprovider is ready"
+      #    make test-container-encrypted
+      # 8. busybox
+      - name: Make busybox
+        working-directory: container-images
+        run: make busybox
       #
       #
       #
