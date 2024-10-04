@@ -19,10 +19,11 @@ jobs:
         with:
           repository: confidential-containers/guest-components
           ref: refs/heads/main
-      - name: Launch coco-keyprovider
+      - name: Launch coco-keyprovider and make enc-unsig
         run: |
           cd attestation-agent/coco_keyprovider
-          RUST_LOG=coco_keyprovider cargo run --release -- --socket 127.0.0.1:50000
+          RUST_LOG=coco_keyprovider cargo run --release -- --socket 127.0.0.1:50000 &
+          make enc-unsig
       #- name: Import github@runner.com key
       #  working-directory: container-images
       #  run: gpg --batch --import keys/sign/github-runner.keys
