@@ -35,27 +35,27 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      # 1. unsig (works)
-      - name: Make unsig
-        working-directory: container-images
-        run: make unsig
-      # 2. cosign-sig (works)
-      - name: Make cosign-sig
-        working-directory: container-images
-        env:
-          COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
-        run: make cosign-sig
-      # 3. simple-sig
-      - name: Make simple-sig
-        working-directory: container-images
-        run: make simple-sig
+      ## 1. unsig (works)
+      #- name: Make unsig
+      #  working-directory: container-images
+      #  run: make unsig
+      ## 2. cosign-sig (works)
+      #- name: Make cosign-sig
+      #  working-directory: container-images
+      #  env:
+      #    COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
+      #  run: make cosign-sig
+      ## 3. simple-sig
+      #- name: Make simple-sig
+      #  working-directory: container-images
+      #  run: make simple-sig
       # 4. enc-unsig
       - name: Launch coco-keyprovider and make enc-unsig
         run: |
           cd guest-components/attestation-agent/coco_keyprovider
-          RUST_LOG=coco_keyprovider cargo run --release -- --socket 127.0.0.1:50000 &
-          cd ../../../container-images
-          make enc-unsig
+          RUST_LOG=coco_keyprovider cargo run --release -- --socket 127.0.0.1:50000
+          #cd ../../../container-images
+          #make enc-unsig
       #- name: runc version check
       #  run: |
       #    runc --version
