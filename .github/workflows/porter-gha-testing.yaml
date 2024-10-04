@@ -35,12 +35,16 @@ jobs:
       #- name: Make unsig
       #  working-directory: container-images
       #  run: make unsig
-      # 2. cosign-sig
-      - name: Make cosign-sig
+      # 2. cosign-sig (works)
+      #- name: Make cosign-sig
+      #  working-directory: container-images
+      #  env:
+      #    COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
+      #  run: make cosign-sig
+      # 3. simple-sig
+      - name: Make simple-sig
         working-directory: container-images
-        env:
-          COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
-        run: make cosign-sig
+        run: make simple-sig
       #- name: Basic echo and docker version
       #  run: |
       #    echo "Start 1"
