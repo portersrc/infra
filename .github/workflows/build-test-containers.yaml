@@ -1,0 +1,62 @@
+name: Build Test Containers
+run-name: Build Test Containers
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - 'main'
+    paths:
+      - 'container-images'
+      - '.github/workflows/build-test-containers.yaml'
+jobs:
+  Explore-GitHub-Actions:
+    env:
+      RUSTC_VERSION: 1.72.0
+    runs-on: ubuntu-24.04
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Check out guest-components
+        uses: actions/checkout@v4
+        with:
+          repository: confidential-containers/guest-components
+          ref: refs/heads/main
+          path: ./guest-components
+      - name: Install Protoc
+        uses: arduino/setup-protoc@v3
+      - name: Import github@runner.com key
+        working-directory: container-images
+        run: gpg --batch --import keys/sign/github-runner.keys
+      - name: Install expect
+        run: sudo apt-get install -y expect
+      - name: Install cosign
+        uses: sigstore/cosign-installer@main
+        with:
+          cosign-release: "v2.4.1"
+      - name: Log in to ghcr
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Make all
+        env:
+          COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
+        run: |
+          cd guest-components/attestation-agent/coco_keyprovider
+          cargo build --release
+          RUST_LOG=coco_keyprovider cargo run --release -- --socket 127.0.0.1:50000 &
+          cd ../../../container-images
+          echo "Waiting for coco-keyprovider on localhost:50000"
+          timeout_count=1
+          while ! nc -z localhost 50000; do
+              timeout_count=$((timeout_count+1))
+              sleep 1
+              if [ $timeout_count == 5 ]; then
+                  echo "ERROR: Timed out. Exiting."
+                  exit 1
+              fi
+          done
+          echo "coco-keyprovider is ready"
+          make all
